@@ -33,29 +33,44 @@ def draw_object() :
 		windows.blit(base, (basexLoop,700))
 	basexLoop = 0
 
-
-
 # dichiarazione funzione per il refresch di ogni fotogrammo
 def refresh() : 
 	pygame.display.update()
-	pygame.time.Clock().tick(FPS)	
+	pygame.time.Clock().tick(FPS)
+
+# funzione che viene chiamata quando perdi
+def looser() :
+	# stampa game over
+	windows.blit(gameOver, (500, 100))
+	refresh()
+	reset = False
+	# while che blocca l'intero gioco finche non si usa uno dei comandi assegnati
+	while not reset:
+		for event in pygame.event.get() :
+			if (event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE) :
+				reset = True
+				inizializza()
+			if event.type == pygame.QUIT or event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+				pygame.quit()
+
 
 inizializza()
-
 
 while True:
 	#avvenimenti indipendenti dal giocatore
 	bird_vely += 1
 	if basex < -repeateBase: basex = 0
 	birdy += bird_vely
+	basex -= vel_wolrd
 	# comandi per comandare roba
 	for event in pygame.event.get() :
 		if (event.type == pygame.KEYDOWN and event.key == pygame.K_UP) :
 			bird_vely = -10
 		if event.type == pygame.QUIT or event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
 			pygame.quit()
+	#quando perdi
+	if birdy > 500 : looser()
 	# modifica la posizione degli elementi a sachermo
 	draw_object()
-	basex -= vel_wolrd
 	# passa al frame successivo
 	refresh()
