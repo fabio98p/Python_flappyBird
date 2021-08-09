@@ -13,6 +13,7 @@ windows = pygame.display.set_mode((1920, 1080))
 FPS = 10000
 vel_wolrd = 3
 repeateBase = 573.75
+font = pygame.font.SysFont('Comic Sans MS', 50)
 
 
 class pipe_class:
@@ -27,6 +28,7 @@ class pipe_class:
 
     def triggher(self, bird, birdx, birdy):
         tolleranza = 0
+
         bird_dx = birdx+bird.get_width()-tolleranza
         bird_sx = birdx+tolleranza
         bird_up = birdy+tolleranza
@@ -40,7 +42,15 @@ class pipe_class:
         if  bird_sx < pipe_dx and bird_dx > pipe_sx:
             if bird_down > pipe_down or bird_up < pipe_up:
                 looser()
+    def between_pipe(self, bird, birdx):
+        tolleranza = 0
+        bird_dx = birdx+bird.get_width()-tolleranza
+        bird_sx = birdx+tolleranza
+        pipe_dx = self.x + pipeDown.get_width()
+        pipe_sx = self.x
 
+        if  bird_sx < pipe_dx and bird_dx > pipe_sx:
+            return True
 # dichiarazione funzione riguardante lo status iniziale del ucceollo
 
 
@@ -48,11 +58,15 @@ def inizializza():
     global birdx, birdy, bird_vely
     global basex
     global pipe
+    global score
+    global between_pipe
     birdx, birdy = 200, 200
     bird_vely = 0
     basex = 0
+    score = 0
     pipe = []
     pipe.append(pipe_class())
+    between_pipe = False
 
 # dichiarazione funzione riguardante l'inserimento delle immagini all'interno del gioco
 
@@ -68,6 +82,8 @@ def draw_object():
         basexLoop += repeateBase
         windows.blit(base, (basexLoop, 700))
     basexLoop = 0
+    score_render = font.render(str(score), 1, (255,255,255))
+    windows.blit(score_render, (100,100))
 
 # dichiarazione funzione per il refresch di ogni fotogrammo
 
@@ -114,6 +130,19 @@ while True:
         pipe.append(pipe_class())
     for t in pipe:
         t.triggher(bird, birdx, birdy)
+    if not between_pipe:
+        for t in pipe:
+            if t.between_pipe(bird, birdx):
+                between_pipe = True
+                break
+    if between_pipe:
+        between_pipe = False
+        for t in pipe:
+            if t.between_pipe(bird, birdx):
+                between_pipe = True
+                break
+        if not between_pipe:
+            score += 1
     # quando perdi
     if birdy > 900:
         looser()
