@@ -1,6 +1,7 @@
 # Flappy Bird Clone
 
-This is a simple clone of the popular Flappy Bird game implemented using Python and Pygame.
+This is a game create following this tutorial 
+https://www.youtube.com/watch?v=POelpwwqxek&list=PLI8CnIMh7oBFN3cx8k_GsBYIRovhKi2gz
 
 ## Installation
 
